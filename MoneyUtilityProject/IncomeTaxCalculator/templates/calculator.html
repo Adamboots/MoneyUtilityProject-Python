@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="{% static 'calculatorFormSubmission.js' %}"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(Work In Progress) Income Tax Calculator</title>
+</head>
+<body>
+    <h1>Income Tax Calculator</h1>
+    <form id="calculatorForm">
+        <label for="income">Income:</label>
+        <input type="number" id="income" name="income" required>
+        <br><br>
+
+        <label for="year">Year Income Was Earned:</label>
+        <select id="year" name="year" required>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+        </select>
+
+        <label for="province">Select Province:</label>
+        <select id="province" name="province" required>
+            <option value="MB">Manitoba</option>
+            <option value="ON">Ontario</option>
+        </select>
+        <br><br>
+
+        <label for="cpp">Apply CPP Deductions:</label>
+        <input type="checkbox" id="cpp" name="cpp">
+        <br><br>
+
+        <button onclick="calculatorSubmit()">Submit</button>
+    </form>
+
+    <div>
+        <label>Post tax income:</label>
+        <h4 id="postTaxIncome"></h4>
+
+        <label>Provincial tax:</label>
+        <h4 id="provincialTax"></h4>
+    </div>
+</body>
+</html>
