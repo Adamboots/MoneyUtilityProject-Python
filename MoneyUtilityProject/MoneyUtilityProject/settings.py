@@ -24,7 +24,7 @@ PORT = int(os.environ.get('PORT', 8000))
 SECRET_KEY = '&wuo55u3ij5y3zh+g0jrrzsk@s_48p@3vv1j248ag8bj6uhuvl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
