@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script src="{% static 'calculatorFormSubmission.js' %}"></script>
+<script src="{% static 'calculatorForm.js' %}"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,10 +38,13 @@
 
     <div>
         <label>Post tax income:</label>
-        <h4 id="postTaxIncome"></h4>
+        <p id="postTaxIncome"></p>
 
         <label>Provincial tax:</label>
-        <h4 id="provincialTax"></h4>
+        <p id="provincialTax"></p>
+
+        <label>Federal tax:</label>
+        <p id="federalTax"></p>
     </div>
 </body>
 </html>

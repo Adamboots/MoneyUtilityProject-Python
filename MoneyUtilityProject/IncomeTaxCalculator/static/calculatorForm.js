@@ -35,4 +35,5 @@ Function to update the page element with the results of the calculation
 function displayCalculatorResults(data){
     document.getElementById("postTaxIncome").innerHTML = data["post_tax_income"];
     document.getElementById("provincialTax").innerHTML = data["provincial_tax"];
+    document.getElementById("federalTax").innerHTML = data["federal_tax"];
 }
