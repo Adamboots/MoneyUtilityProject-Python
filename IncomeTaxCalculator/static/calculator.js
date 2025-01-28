@@ -2,22 +2,8 @@
 /*
 Function to submit the calculator form data to backend
 */
-function calculatorSubmit(){
+function calculatorSubmit(event) {
     event.preventDefault(); // Prevent form from redirecting
-
-    // Retrieve form values
-    const income = document.getElementById('income').value;
-    const year = document.getElementById('year').value;
-    const province = document.getElementById('province').value;
-    const numPayments = document.getElementById('numPayments').value;
-
-    let data = {
-        "income": income,
-        "year": year,
-        "province": province,
-        "numPayments": numPayments
-    };
-
     $.ajax({
            type: "POST",
            url: "calculate_income/",
@@ -30,7 +16,22 @@ function calculatorSubmit(){
 }
 
 /*
-Function to update the page element with the results of the calculation
+Function to submit the generate income ranges form data to backend
+*/
+function incomeRangeGeneratorSubmit(event) {
+    event.preventDefault(); // Prevent form from redirecting
+    $.ajax({
+        type: "POST",
+        url: "generate_income_ranges/",
+        data: $("#generateIncomeRangesForm").serialize(), // serializes the form's elements.
+        success: function (data) {
+            displayIncomeGeneratorResults(JSON.parse(data));
+        }
+    });
+}
+
+/*
+Function to update the page elements with the results of the calculation
 */
 function displayCalculatorResults(data) {
     let templateElement = document.getElementById("calculatorResultTemplate");
@@ -38,20 +39,68 @@ function displayCalculatorResults(data) {
 
     newElement.classList.remove("hidden-content");
 
-    let pChildren = newElement.getElementsByTagName("P");
-    pChildren["postTaxIncomeYearly"].insertAdjacentHTML("afterbegin", data["post_tax_income_yearly"]);
-    pChildren["postTaxIncomeBiWeekly"].insertAdjacentHTML("afterbegin", data["post_tax_income_26"]);
-    pChildren["postTaxIncomeWeekly"].insertAdjacentHTML("afterbegin", data["post_tax_income_52"]);
-    pChildren["postTaxIncome40Hours"].insertAdjacentHTML("afterbegin", data["post_tax_income_2080"]);
-    pChildren["postTaxIncome37.5Hours"].insertAdjacentHTML("afterbegin", data["post_tax_income_1950"]);
-    pChildren["postTaxIncome35Hours"].insertAdjacentHTML("afterbegin", data["post_tax_income_1820"]);
+    let preTaxIncomeOtherForms = data["pre_tax_income_other_forms"];
+    let postTaxIncomeOtherForms = data["post_tax_income_other_forms"];
 
-    pChildren["provincialTax"].innerHTML = data["provincial_tax"];
-    pChildren["federalTax"].innerHTML = data["federal_tax"];
+    let formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'CAD' });
+
+    let pChildren = newElement.getElementsByTagName("P");
+    pChildren["postTaxIncomeYearly"].insertAdjacentHTML("afterbegin", formatter.format(data["post_tax_income_yearly"]));
+    pChildren["postTaxIncomeMonthly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_12"]));
+    pChildren["postTaxIncomeBiWeekly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_26"]));
+    pChildren["postTaxIncomeWeekly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_52"]));
+    pChildren["postTaxIncome40Hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_2080"]));
+    pChildren["postTaxIncome37.5Hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1950"]));
+    pChildren["postTaxIncome35Hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1820"]));
+
+    pChildren["provincialTax"].innerHTML = formatter.format(data["provincial_tax"]);
+    pChildren["federalTax"].innerHTML = formatter.format(data["federal_tax"]);
 
     templateElement.insertAdjacentElement("afterend", newElement);
 }
 
+/*
+Function to update the page elements with the results of the generator
+*/
+function displayIncomeGeneratorResults(data) {
+    let templateElementPreTax = document.getElementById("incomeRangeGeneratorResultsPreTaxTemplate");
+    let templateElementPostTax = document.getElementById("incomeRangeGeneratorResultsPostTaxTemplate");
+
+    for (let i = 0; i < data.length; i++) {
+        let newElementPreTax = templateElementPreTax.cloneNode(true);
+        let newElementPostTax = templateElementPostTax.cloneNode(true);
+
+        newElementPreTax.classList.remove("hidden-content");
+        newElementPostTax.classList.remove("hidden-content");
+
+        let currData = data[i];
+        let preTaxIncomeOtherForms = currData["pre_tax_income_other_forms"];
+        let postTaxIncomeOtherForms = currData["post_tax_income_other_forms"];
+
+        let formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'CAD' });
+
+        let tdChildrenPreTax = newElementPreTax.getElementsByTagName("td");
+        tdChildrenPreTax["preTaxIncomeYearly"].insertAdjacentHTML("afterbegin", formatter.format(currData["pre_tax_income_yearly"]));
+        tdChildrenPreTax["preTaxIncomeMonthly"].insertAdjacentHTML("afterbegin", formatter.format(preTaxIncomeOtherForms["payments_12"]));
+        tdChildrenPreTax["preTaxIncome40hours"].insertAdjacentHTML("afterbegin", formatter.format(preTaxIncomeOtherForms["payments_2080"]));
+        tdChildrenPreTax["preTaxIncome37.5hours"].insertAdjacentHTML("afterbegin", formatter.format(preTaxIncomeOtherForms["payments_1950"]));
+        tdChildrenPreTax["preTaxIncome35hours"].insertAdjacentHTML("afterbegin", formatter.format(preTaxIncomeOtherForms["payments_1820"]));
+
+        let tdChildrenPostTax = newElementPostTax.getElementsByTagName("td");
+        console.log(tdChildrenPostTax);
+        tdChildrenPostTax["postTaxIncomeYearly"].insertAdjacentHTML("afterbegin", formatter.format(currData["post_tax_income_yearly"]));
+        tdChildrenPostTax["postTaxIncomeMonthly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_12"]));
+        tdChildrenPostTax["postTaxIncome40hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_2080"]));
+        tdChildrenPostTax["postTaxIncome37.5hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1950"]));
+        tdChildrenPostTax["postTaxIncome35hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1820"]));
+
+        tdChildrenPostTax["taxYear"].innerHTML = currData["tax_year"];
+        tdChildrenPostTax["province"].innerHTML = currData["province"];
+
+        templateElementPostTax.insertAdjacentElement("afterend", newElementPostTax);
+        templateElementPostTax.insertAdjacentElement("afterend", newElementPreTax);
+    }
+}
 
 function collapsibleContent(element) {
 

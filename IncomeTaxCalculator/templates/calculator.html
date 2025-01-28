@@ -13,65 +13,167 @@
 </head>
 <body>
 
-    <!-- Calculator -->
-    <section>
-        <div>
-            <form id="calculatorForm">
-                <label for="income">Income:</label>
-                <br>
-                <input type="number" id="income" name="income" required>
-                <select id="numPayments" name="numPayments" required>
-                    <option value="1">Yearly</option>
-                    <option value="26">Bi-weekly</option>
-                    <option value="52">Weekly</option>
-                    <option value="2080">Hourly (40hrs/week)</option>
-                    <option value="1950">Hourly (37.5hrs/week)</option>
-                    <option value="1820">Hourly (35hrs/week)</option>
-                </select>
-                <br>
+    <!-- Additional Information Section -->
+    <div>
+        <button type="button" class="collapsible" onclick="collapsibleContent(this)">Additional Information</button>
+        <section class="collapsible-content">
+            <p>
+                Lorem Ipsum fdkjhsfjfsd;
+                dkfgjdklg
+                dfgkjdfklg
+                sjskjldd
+            </p>
+        </section>
+    </div>
+
+    <!-- Calculator Section -->
+    <div>
+        <button type="button" class="collapsible" onclick="collapsibleContent(this)">Income Calculator</button>
+        <section class="collapsible-content">
+
+            <!-- Calculator Form -->
+            <section>
+                <div>
+                    <form id="calculatorForm">
+                        <label for="income">Income:</label>
+                        <br>
+                        <input type="number" name="income" required>
+                        <select name="numPayments" required>
+                            <option value="1">Yearly</option>
+                            <option value="26">Bi-weekly</option>
+                            <option value="52">Weekly</option>
+                            <option value="2080">Hourly (40hrs/week)</option>
+                            <option value="1950">Hourly (37.5hrs/week)</option>
+                            <option value="1820">Hourly (35hrs/week)</option>
+                        </select>
+                        <br>
 
 
-                <label for="province">Province</label>
-                <label for="year">Year</label>
-                <br>
+                        <label for="province">Province</label>
+                        <label for="year">Year</label>
+                        <br>
 
-                <select id="province" name="province" required>
-                    <option value="MB">Manitoba</option>
-                    <option value="ON">Ontario</option>
-                </select>
+                        <select name="province" required>
+                            <option value="MB">Manitoba</option>
+                            <option value="ON">Ontario</option>
+                        </select>
 
-                <select id="year" name="year" required>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                </select>
-                <br>
+                        <select name="year" required>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                        <br>
 
-                <button onclick="calculatorSubmit()">Submit</button>
-            </form>
-        </div>
-    </section>
+                        <button onclick="calculatorSubmit(event)">Submit</button>
+                    </form>
+                </div>
+            </section>
 
-     <!--Results from calculator--> 
-    <section>
-        <div id="calculatorResultTemplate" class="hidden-content">
-            <button type="button" class="collapsible" onclick="collapsibleContent(this)">+</button>
-            <div class="collapsible-content">
-                <label>Post tax income:</label>
-                <p id="postTaxIncomeYearly">/Year</p>
-                <p id="postTaxIncomeBiWeekly">/Two Weeks</p>
-                <p id="postTaxIncomeWeekly">/Week</p>
-                <p id="postTaxIncome40Hours">/hr (40hrs a week)</p>
-                <p id="postTaxIncome37.5Hours">/hr (37.5hrs a week)</p>
-                <p id="postTaxIncome35Hours">/hr (35hrs a week)</p>
+            <!-- Results from calculator -->
+            <section>
+                <div id="calculatorResultTemplate" class="hidden-content">
+                    <button type="button" class="collapsible" onclick="collapsibleContent(this)">+</button>
+                    <div class="collapsible-content">
+                        <label>Post tax income:</label>
+                        <p id="postTaxIncomeYearly">/Year</p>
+                        <p id="postTaxIncomeMonthly">/Month</p>
+                        <p id="postTaxIncomeBiWeekly">/Two Weeks</p>
+                        <p id="postTaxIncomeWeekly">/Week</p>
+                        <p id="postTaxIncome40Hours">/hr (40hrs a week)</p>
+                        <p id="postTaxIncome37.5Hours">/hr (37.5hrs a week)</p>
+                        <p id="postTaxIncome35Hours">/hr (35hrs a week)</p>
 
-                <label>Provincial tax:</label>
-                <p id="provincialTax"></p>
+                        <label>Provincial tax:</label>
+                        <p id="provincialTax"></p>
 
-                <label>Federal tax:</label>
-                <p id="federalTax"></p>
-            </div>
-        </div>
-    </section>
+                        <label>Federal tax:</label>
+                        <p id="federalTax"></p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <!-- Generate Income Ranges Section -->
+    <div>
+        <button type="button" class="collapsible" onclick="collapsibleContent(this)">Generate Income Ranges</button>
+        <section class="collapsible-content">
+
+            <!-- Income ranges generator form -->
+            <section>
+                <div>
+                    <form id="generateIncomeRangesForm">
+                        <label for="income_starting">Income Starting at:</label>
+                        <label for="income_ending">Income Ending at:</label>
+                        <br>
+
+                        <input type="number" name="income_starting" required>
+                        <input type="number" name="income_ending" required>
+                        <br>
+
+                        <label for="increment">Increment:</label>
+                        <input type="number" name="increment" required>
+
+
+                        <label for="province">Province</label>
+                        <label for="year">Year</label>
+                        <br>
+
+                        <select name="province" required>
+                            <option value="MB">Manitoba</option>
+                            <option value="ON">Ontario</option>
+                        </select>
+
+                        <select name="year" required>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                        <br>
+
+                        <button onclick="incomeRangeGeneratorSubmit(event)">Submit</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results from generator -->
+            <section>
+                <div>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Yearly Income</th>
+                            <th>Monthly Income</th>
+                            <th>Hourly Income (40hrs/week)</th>
+                            <th>Hourly Income (37.5hrs/week)</th>
+                            <th>Hourly Income (35hrs/week)</th>
+                            <th>Tax Year</th>
+                            <th>Province</th>
+                        </tr>
+
+                        <tr id="incomeRangeGeneratorResultsPreTaxTemplate" class="hidden-content row-pre-tax">
+                            <td>Pre-tax</td>
+                            <td id="preTaxIncomeYearly">/year</td>
+                            <td id="preTaxIncomeMonthly">/month</td>
+                            <td id="preTaxIncome40hours">/hr (40hr weeks)</td>
+                            <td id="preTaxIncome37.5hours">/hr (37.5hr weeks)</td>
+                            <td id="preTaxIncome35hours">/hr (35hr weeks)</td>
+                        </tr>
+
+                        <tr id="incomeRangeGeneratorResultsPostTaxTemplate" class="hidden-content row-post-tax">
+                            <td>Post-tax</td>
+                            <td id="postTaxIncomeYearly">/year</td>
+                            <td id="postTaxIncomeMonthly">/month</td>
+                            <td id="postTaxIncome40hours">/hr (40hr weeks)</td>
+                            <td id="postTaxIncome37.5hours">/hr (37.5hr weeks)</td>
+                            <td id="postTaxIncome35hours">/hr (35hr weeks)</td>
+                            <td id="taxYear"></td>
+                            <td id="province"></td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </div>
 
 </body>
 </html>

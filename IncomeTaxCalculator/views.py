@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from multipledispatch import dispatch
 
+other_common_income_payments = [12, 26, 52, 2080, 1950, 1820]
 
 # Views to return templates
 def calculator_page(request):
@@ -21,42 +21,71 @@ def request_calculate_income(request):
     input_province = request.POST.get('province', 0)
     input_payments = request.POST.get('numPayments', 0)
 
-    results = calculate_income(input_income, input_year, input_province, input_payments)
+    clean_input = sanitize_calculator_input(input_income, input_year, input_province, input_payments)
+    income = clean_input["income"]
+    tax_year = clean_input["tax_year"]
+    province = clean_input["province"]
+    num_payments = clean_input["num_payments"]
+
+    results = calculate_post_tax_income(income, tax_year, province, num_payments)
+    return HttpResponse(json.dumps(results))
+
+# Entry method to generate income ranges requests
+@csrf_exempt
+def request_generate_income_ranges(request):
+    input_income_start = request.POST.get('income_starting', 0)
+    input_income_end = request.POST.get('income_ending', 0)
+    input_increment = request.POST.get('increment', 0)
+    input_year = request.POST.get('year', 0)
+    input_province = request.POST.get('province', 0)
+    input_payments = request.POST.get('numPayments', 0)
+
+    clean_input = sanitize_income_ranges_generator_input(input_income_start, input_income_end, input_increment, input_year, input_province)
+    income_start = clean_input["income_start"]
+    income_end = clean_input["income_end"]
+    increment = clean_input["increment"]
+    tax_year = clean_input["tax_year"]
+    province = clean_input["province"]
+
+    results = generate_income_ranges(income_start, income_end, increment, tax_year, province)
     return HttpResponse(json.dumps(results))
 
 
-# Calculates the income corresponding to input parameters
-def calculate_income(input_income, input_year, input_province, input_payments):
+# Calculates the post-tax income 
+def calculate_post_tax_income(income, tax_year, province, num_payments):
 
-    clean_input = sanitize_calculator_input(input_income, input_year, input_province, input_payments)
+    pre_tax_income = income * num_payments
 
-    province = clean_input["province"]
-    tax_year = clean_input["tax_year"]
-    num_payments = clean_input["num_payments"]
-    income = clean_input["income"] * num_payments
+    provincial_tax = calculate_provincial_tax(pre_tax_income, tax_year, province)
+    federal_tax = calculate_federal_tax(pre_tax_income, tax_year)
 
-    provincial_tax = calculate_provincial_tax(income, tax_year, province)
-    federal_tax = calculate_federal_tax(income, tax_year)
+    post_tax_income = pre_tax_income - provincial_tax - federal_tax
 
-    final_income = income - provincial_tax - federal_tax
+    other_income_forms_pre_tax = get_income_in_other_forms(pre_tax_income, other_common_income_payments)
+    other_income_forms_post_tax = get_income_in_other_forms(post_tax_income, other_common_income_payments)
 
     results = {
-        "pre_tax_income_yearly:": income,
-        "post_tax_income_yearly": final_income,
+        "pre_tax_income_yearly": pre_tax_income,
+        "post_tax_income_yearly": post_tax_income,
         "tax_year": tax_year,
         "province": province,
         "provincial_tax": provincial_tax,
-        "federal_tax": federal_tax
+        "federal_tax": federal_tax,
+        "pre_tax_income_other_forms": other_income_forms_pre_tax,
+        "post_tax_income_other_forms": other_income_forms_post_tax
     }
-
-    other_common_income_payments = [26, 52, 2080, 1950, 1820]
-    other_income_forms = get_income_in_other_forms(final_income, other_common_income_payments)
-    results.update(other_income_forms)
 
     return results
 
-#def calculate_income_ranges(request):
-#    return 0
+# Generates a range of post-tax incomes
+def generate_income_ranges(income_start, income_end, increment, tax_year, province):
+    results = []
+
+    for income in range(income_start, income_end+1, increment):
+        results.append(calculate_post_tax_income(income, tax_year, province, 1))
+
+    return results
+
 
 # Calculates provincial tax
 def calculate_provincial_tax(income, year, province):
@@ -99,7 +128,7 @@ def get_income_in_other_forms(yearly_income, num_payments):
     result = {}
     for num_payment in num_payments:
         other_income_form = yearly_income / num_payment
-        key = f"post_tax_income_{num_payment}"
+        key = f"payments_{num_payment}"
         result[key] = other_income_form
 
     return result
@@ -127,19 +156,26 @@ def get_federal_tax_brackets(year):
     }
     return tax_rate_2024
 
-# Cleaner methods for calculator input
-@dispatch(str, str, str)
-def sanitize_calculator_input(input_income, input_year, input_province):
-    income = int(html.escape(input_income))
-    tax_year = int(html.escape(input_year))
-    province = html.escape(input_province)
-
-    return {"income": income, "tax_year": tax_year, "province": province}
-
-@dispatch(str, str, str, str)
+# Cleaner methods
 def sanitize_calculator_input(input_income, input_year, input_province, input_payments):
-    num_payments = int(html.escape(input_payments))
+    income = int(html.escape(str(input_income)))
+    tax_year = int(html.escape(str(input_year)))
+    province = html.escape(str(input_province))
+    num_payments = int(html.escape(str(input_payments)))
 
-    results = sanitize_calculator_input(input_income, input_year, input_province)
-    results["num_payments"] = num_payments
-    return results
+    return {"income": income, "tax_year": tax_year, "province": province, "num_payments": num_payments}
+
+def sanitize_income_ranges_generator_input(input_income_start, input_income_end, input_increment, input_year, input_province):
+    income_start = int(html.escape(str(input_income_start)))
+    income_end = int(html.escape(str(input_income_end)))
+    increment = int(html.escape(str(input_increment)))
+    tax_year = int(html.escape(str(input_year)))
+    province = html.escape(str(input_province))
+
+    return {
+        "income_start": income_start, 
+        "income_end": income_end, 
+        "increment": increment,
+        "tax_year": tax_year, 
+        "province": province
+    }

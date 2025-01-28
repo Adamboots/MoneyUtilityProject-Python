@@ -12,3 +12,11 @@
 .hidden-content {
     display: none;
 }
+
+.row-pre-tax {
+
+}
+
+.row-post-tax {
+    background-color: #d5e1cf;
+}
