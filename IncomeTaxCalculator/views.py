@@ -5,24 +5,35 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from multipledispatch import dispatch
 
 
+# Views to return templates
 def calculator_page(request):
     template = loader.get_template('calculator.html')
     return HttpResponse(template.render())
 
 # Entry method to calculate income requests
 @csrf_exempt
-def calculate_income(request):
+def request_calculate_income(request):
     input_income = request.POST.get('income', 0)
     input_year = request.POST.get('year', 0)
-    input_payments = request.POST.get('numPayments', 0)
     input_province = request.POST.get('province', 0)
+    input_payments = request.POST.get('numPayments', 0)
 
-    province = html.escape(input_province)
-    num_payments = int(html.escape(input_payments))
-    tax_year = int(html.escape(input_year))
-    income = int(html.escape(input_income)) * num_payments
+    results = calculate_income(input_income, input_year, input_province, input_payments)
+    return HttpResponse(json.dumps(results))
+
+
+# Calculates the income corresponding to input parameters
+def calculate_income(input_income, input_year, input_province, input_payments):
+
+    clean_input = sanitize_calculator_input(input_income, input_year, input_province, input_payments)
+
+    province = clean_input["province"]
+    tax_year = clean_input["tax_year"]
+    num_payments = clean_input["num_payments"]
+    income = clean_input["income"] * num_payments
 
     provincial_tax = calculate_provincial_tax(income, tax_year, province)
     federal_tax = calculate_federal_tax(income, tax_year)
@@ -30,7 +41,10 @@ def calculate_income(request):
     final_income = income - provincial_tax - federal_tax
 
     results = {
+        "pre_tax_income_yearly:": income,
         "post_tax_income_yearly": final_income,
+        "tax_year": tax_year,
+        "province": province,
         "provincial_tax": provincial_tax,
         "federal_tax": federal_tax
     }
@@ -39,7 +53,10 @@ def calculate_income(request):
     other_income_forms = get_income_in_other_forms(final_income, other_common_income_payments)
     results.update(other_income_forms)
 
-    return HttpResponse(json.dumps(results))
+    return results
+
+#def calculate_income_ranges(request):
+#    return 0
 
 # Calculates provincial tax
 def calculate_provincial_tax(income, year, province):
@@ -109,3 +126,20 @@ def get_federal_tax_brackets(year):
         33: int(-1)
     }
     return tax_rate_2024
+
+# Cleaner methods for calculator input
+@dispatch(str, str, str)
+def sanitize_calculator_input(input_income, input_year, input_province):
+    income = int(html.escape(input_income))
+    tax_year = int(html.escape(input_year))
+    province = html.escape(input_province)
+
+    return {"income": income, "tax_year": tax_year, "province": province}
+
+@dispatch(str, str, str, str)
+def sanitize_calculator_input(input_income, input_year, input_province, input_payments):
+    num_payments = int(html.escape(input_payments))
+
+    results = sanitize_calculator_input(input_income, input_year, input_province)
+    results["num_payments"] = num_payments
+    return results
