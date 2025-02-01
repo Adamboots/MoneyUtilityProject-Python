@@ -24,7 +24,7 @@ PORT = int(os.environ.get('PORT', 8000))
 SECRET_KEY = '&wuo55u3ij5y3zh+g0jrrzsk@s_48p@3vv1j248ag8bj6uhuvl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'MoneyUtilityProject',
     'IncomeTaxCalculator'
 ]
 

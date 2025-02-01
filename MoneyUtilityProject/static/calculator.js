@@ -63,8 +63,11 @@ function displayCalculatorResults(data) {
 Function to update the page elements with the results of the generator
 */
 function displayIncomeGeneratorResults(data) {
+    let hiddenResults = document.getElementById("incomeRangeGeneratorResultsHiddenContainer");
     let templateElementPreTax = document.getElementById("incomeRangeGeneratorResultsPreTaxTemplate");
     let templateElementPostTax = document.getElementById("incomeRangeGeneratorResultsPostTaxTemplate");
+
+    hiddenResults.classList.remove("hidden-content");
 
     for (let i = 0; i < data.length; i++) {
         let newElementPreTax = templateElementPreTax.cloneNode(true);
@@ -87,7 +90,6 @@ function displayIncomeGeneratorResults(data) {
         tdChildrenPreTax["preTaxIncome35hours"].insertAdjacentHTML("afterbegin", formatter.format(preTaxIncomeOtherForms["payments_1820"]));
 
         let tdChildrenPostTax = newElementPostTax.getElementsByTagName("td");
-        console.log(tdChildrenPostTax);
         tdChildrenPostTax["postTaxIncomeYearly"].insertAdjacentHTML("afterbegin", formatter.format(currData["post_tax_income_yearly"]));
         tdChildrenPostTax["postTaxIncomeMonthly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_12"]));
         tdChildrenPostTax["postTaxIncome40hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_2080"]));

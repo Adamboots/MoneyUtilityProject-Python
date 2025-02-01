@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Money Managment Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-highway.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'general.css' %}">
+    <link rel="stylesheet" href="{% static 'calculator.css' %}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="{% static 'calculator.js' %}"></script>
+</head>
+<body>
+
+
+    {% include "base_nav.html" %}
+
+    Work In Progress
+
+    <div>
+        <button><a href="/income_calculator">Post Tax Income Calculator</a></button>
+    </div>
+
+    {% include "base_footer.html" %}
+
+</body>
+</html>

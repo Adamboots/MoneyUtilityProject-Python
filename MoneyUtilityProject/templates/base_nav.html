@@ -1,0 +1,25 @@
+<section class="navigation w3-metro-light-blue w3-container">
+    <button onclick="goToTop()" id="back-to-top" title="Go to top"><i class="fa fa-toggle-up"></i></button>
+    <nav class="nav-container">
+        <div class="logo w3-padding-large">
+            <p>Adam's Money Management Tools</p>
+        </div>
+        <div class="mobile-button">
+            <span style="float: right;" onclick="toggleMobileNavigation()">&#9776;</span>
+        </div>
+        <div class="links">
+            <a href="/about">About</a>-
+            <a href="/income_calculator">Income Calculator</a>-
+            <a href="/budgeting_tool">Budgeting Tool</a>-
+            <a href="/recruiters">Recruiters</a>
+
+        </div>
+        <div id="mobile-sidenav" class="mobile-links w3-sand">
+            <a href="javascript:void(0)" class="closebtn w3-round" onclick="toggleMobileNavigation()">&times;</a>
+            <a href="/about" onclick="toggleMobileNavigation()">About</a>
+            <a href="/income_calculator" onclick="toggleMobileNavigation()">Income Calculator</a>
+            <a href="/budgeting_tool" onclick="toggleMobileNavigation()">Budgeting Tool</a>
+            <a href="/recruiters" onclick="toggleMobileNavigation()">Recruiters</a>
+        </div>
+    </nav>
+</section>

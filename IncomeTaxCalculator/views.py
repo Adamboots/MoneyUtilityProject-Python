@@ -10,7 +10,7 @@ other_common_income_payments = [12, 26, 52, 2080, 1950, 1820]
 
 # Views to return templates
 def calculator_page(request):
-    template = loader.get_template('calculator.html')
+    template = loader.get_template('page_calculator.html')
     return HttpResponse(template.render())
 
 # Entry method to calculate income requests

@@ -1,0 +1,38 @@
+.section-spacing {
+    margin-bottom: 15px;
+}
+
+.form-input {
+    height: 28px;
+}
+
+.form-submit {
+    width: 65px;
+    height: 30px;
+}
+
+.form-label-prov {
+    width: 100px;
+}
+
+.form-select-prov {
+    width: 90px;
+    margin-right: 10px;
+}
+
+.form-label-income-range {
+    width: 215px;
+}
+
+.form-input-income-range {
+    width: 180px;
+    margin-right: 35px;
+}
+
+.row-pre-tax {
+
+}
+
+.row-post-tax {
+    background-color: #d5e1cf;
+}
