@@ -73,7 +73,7 @@
                                         <option value="MB">Manitoba</option>
                                         <option value="ON">Ontario</option>
                                     </select>
-                                    <select name="form-input year" required>
+                                    <select class="form-input" name="year" required>
                                         <option value="2024">2024</option>
                                         <option value="2023">2023</option>
                                     </select>
@@ -88,25 +88,30 @@
                 </section>
 
                 <!-- Results from calculator -->
-                <section class="section-spacing">
+                <section id="incomeCalculatorResultsSection" class="section-spacing">
                     <div id="calculatorResultTemplate" class="hidden-content">
-                        <button type="button" class="collapsible" onclick="collapsibleContent(this)">+</button>
-                        <div class="collapsible-content">
-                            <label>Post tax income:</label>
-                            <p id="postTaxIncomeYearly">/Year</p>
-                            <p id="postTaxIncomeMonthly">/Month</p>
-                            <p id="postTaxIncomeBiWeekly">/Two Weeks</p>
-                            <p id="postTaxIncomeWeekly">/Week</p>
-                            <p id="postTaxIncome40Hours">/hr (40hrs a week)</p>
-                            <p id="postTaxIncome37.5Hours">/hr (37.5hrs a week)</p>
-                            <p id="postTaxIncome35Hours">/hr (35hrs a week)</p>
+                            <button type="button" class="collapsible flex-container calculator-result-row-button" onclick="collapsibleContent(this)">
+                                <p class="calculator-result-row-button-content">+</p>
+                                <p id="buttonPreTaxIncome" class="calculator-result-row-button-content">150/year</p>
+                                <p id="buttonProvince" class="calculator-result-row-button-content">MB</p>
+                                <p id="buttonTaxYear" class="calculator-result-row-button-content">2024</p>
+                            </button>
+                            <div class="collapsible-content">
+                                <label>Post tax income:</label>
+                                <p id="postTaxIncomeYearly">/Year</p>
+                                <p id="postTaxIncomeMonthly">/Month</p>
+                                <p id="postTaxIncomeBiWeekly">/Two Weeks</p>
+                                <p id="postTaxIncomeWeekly">/Week</p>
+                                <p id="postTaxIncome40Hours">/hr (40hrs a week)</p>
+                                <p id="postTaxIncome37.5Hours">/hr (37.5hrs a week)</p>
+                                <p id="postTaxIncome35Hours">/hr (35hrs a week)</p>
 
-                            <label>Provincial tax:</label>
-                            <p id="provincialTax"></p>
+                                <label>Provincial tax:</label>
+                                <p id="provincialTax"></p>
 
-                            <label>Federal tax:</label>
-                            <p id="federalTax"></p>
-                        </div>
+                                <label>Federal tax:</label>
+                                <p id="federalTax"></p>
+                            </div>
                     </div>
                 </section>
             </section>

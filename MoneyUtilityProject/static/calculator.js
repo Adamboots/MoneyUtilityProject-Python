@@ -38,6 +38,7 @@ function displayCalculatorResults(data) {
     let newElement = templateElement.cloneNode(true);
 
     newElement.classList.remove("hidden-content");
+    newElement.id = "";
 
     let preTaxIncomeOtherForms = data["pre_tax_income_other_forms"];
     let postTaxIncomeOtherForms = data["post_tax_income_other_forms"];
@@ -45,6 +46,13 @@ function displayCalculatorResults(data) {
     let formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'CAD' });
 
     let pChildren = newElement.getElementsByTagName("P");
+
+    // Button for result
+    pChildren["buttonPreTaxIncome"].innerHTML = formatter.format(data["pre_tax_income_yearly"]);
+    pChildren["buttonProvince"].innerHTML = data["province"];
+    pChildren["buttonTaxYear"].innerHTML = data["tax_year"];
+
+    // Result elements
     pChildren["postTaxIncomeYearly"].insertAdjacentHTML("afterbegin", formatter.format(data["post_tax_income_yearly"]));
     pChildren["postTaxIncomeMonthly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_12"]));
     pChildren["postTaxIncomeBiWeekly"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_26"]));
@@ -57,6 +65,8 @@ function displayCalculatorResults(data) {
     pChildren["federalTax"].innerHTML = formatter.format(data["federal_tax"]);
 
     templateElement.insertAdjacentElement("afterend", newElement);
+
+    //SaveLocalStorage();
 }
 
 /*
@@ -75,6 +85,9 @@ function displayIncomeGeneratorResults(data) {
 
         newElementPreTax.classList.remove("hidden-content");
         newElementPostTax.classList.remove("hidden-content");
+
+        newElementPreTax.id = "";
+        newElementPostTax.id = "";
 
         let currData = data[i];
         let preTaxIncomeOtherForms = currData["pre_tax_income_other_forms"];
@@ -118,3 +131,8 @@ function collapsibleContent(element) {
         contentElement.style.display = "block";
     }
 }
+
+//// Reads content of income calculator and saves data in localstorage for future use
+//function SaveLocalStorage() {
+//    let resultsSection = document.getElementById("incomeCalculatorResultsSection");
+//}

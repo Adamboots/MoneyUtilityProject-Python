@@ -29,6 +29,14 @@
     margin-right: 35px;
 }
 
+.calculator-result-row-button {
+    padding-right: 15px;
+}
+
+.calculator-result-row-button-content {
+    margin-left: 10px;
+}
+
 .row-pre-tax {
 
 }
