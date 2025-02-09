@@ -73,6 +73,14 @@ body {
     padding: 10px;
 }
 
+.section-spacing {
+    margin-bottom: 15px;
+}
+
+.section-padding {
+    padding-left: 18px;
+}
+
 /*Navigation*/
 
 .navigation {
@@ -168,6 +176,15 @@ body {
         top: 0;
     }
 
+
+/*General Form CSS*/
+.form-input {
+    height: 28px;
+}
+
+.form-submit-height {
+    height: 30px;
+}
 
 /*Footer*/
 .footer {
