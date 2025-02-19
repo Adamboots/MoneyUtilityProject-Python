@@ -21,12 +21,24 @@
 
     {% include "base_nav.html" %}
 
-    <!-- Expenses -->
-    <section class="section-spacing section-padding">
+    <div class="section-spacing section-padding">
+        <br />
+
+        <div>
+            <h3>Build Your Budget Below!</h3>
+        </div>
+
+        <br />
+        <div>
+            <button onclick="DisplayMonthlyExpenseForm()">Expenses</button>
+            <button onclick="DisplayIncomeForm()">Income</button>
+            <button onclick="DisplaySavingsGoalsForm()">Savings Goals</button>
+        </div>
+
+        <br />
 
         <!-- Form to add expenses -->
-        <div>
-            <br />
+        <div id="expenseFormContainer">
             <form id="expenseForm">
                 <div>
                     <label for="expenseLabel">Expense Label:</label>
@@ -39,8 +51,8 @@
                 <div>
                     <label for="expenseCost">Amount:</label>
                     <br />
-                    <input id="expenseCost" type="number" name="expenseCost" required />
-                    <select id="expenseFrequency" name="expenseFrequency">
+                    <input class="form-input" id="expenseCost" type="number" name="expenseCost" required />
+                    <select class="form-input" id="expenseFrequency" name="expenseFrequency">
                         <option value="52">Weekly</option>
                         <option value="12" selected>Monthly</option>
                         <option value="1">Yearly</option>
@@ -53,10 +65,88 @@
             </form>
         </div>
 
+
+        <!-- Form to add income -->
+        <div id="incomeFormContainer" class="hidden-content">
+            <form id="calculatorForm">
+                <div>
+                    <label for="incomeLabel">Income Label:</label>
+                    <br />
+                    <input id="incomeLabel" class="form-input" type="text" name="incomeLabel" required />
+                </div>
+                <br />
+
+                <div>
+                    <label for="incomeAmount">Income:</label>
+                    <br>
+                    <input id="incomeAmount" class="form-input" type="number" name="incomeAmount" required>
+                    <select id="numPayments" class="form-input" name="numPayments" required>
+                        <option value="1">Yearly</option>
+                        <option value="26">Bi-weekly</option>
+                        <option value="52">Weekly</option>
+                        <option value="2080">Hourly (40hrs/week)</option>
+                        <option value="1950">Hourly (37.5hrs/week)</option>
+                        <option value="1820">Hourly (35hrs/week)</option>
+                    </select>
+                </div>
+                <br>
+
+                <div>
+                    <div class="flex-container">
+                        <label class="form-label-prov" for="incomeProvince">Province</label>
+                        <label for="incomeYear">Year</label>
+                    </div>
+
+                    <div class="flex-container">
+                        <select id="incomeProvince" class="form-input form-select-prov" name="incomeProvince" required>
+                            <option value="MB">Manitoba</option>
+                            <option value="ON">Ontario</option>
+                        </select>
+                        <select id="incomeYear" class="form-input" name="incomeYear" required>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br>
+
+                <button class="form-submit" onclick="SubmitAddIncome(event)">Add Income</button>
+            </form>
+        </div>
+
+        <!-- Form to add savings goal -->
+        <div id="savingsGoalsFormContainer" class="hidden-content">
+            <form id="savingsGoalsForm">
+                <div>
+                    <label for="savingsGoalLabel">Savings Goal Label:</label>
+                    <br />
+                    <input id="savingsGoalLabel" class="form-input" type="text" name="savingsGoalLabel" required />
+                </div>
+
+                <br />
+
+                <div>
+                    <label for="savingsAmount">Amount:</label>
+                    <br />
+                    <input class="form-input" id="savingsAmount" type="number" name="savingsAmount" required />
+                    <select class="form-input" id="savingsFrequency" name="savingsFrequency">
+                        <option value="52">Weekly</option>
+                        <option value="12">Monthly</option>
+                        <option value="1" selected>Yearly</option>
+                    </select>
+                </div>
+
+                <br />
+
+                <button class="form-submit-height" onclick="SubmitAddSavingsGoal(event)">Add Savings Goal</button>
+            </form>
+        </div>
+
         <br />
-        <!-- Tracking expenses -->
+        <!-- Displaying expenses -->
         <div id="monthlyExpenseContainer" class="hidden-content">
-            <p>Monthly Expenses</p>
+            <p class="bold p2 underline">Monthly Expenses</p>
             <table>
                 <tr>
                     <th>Label</th>
@@ -67,10 +157,116 @@
                     <td id="label"></td>
                     <td id="cost"></td>
                 </tr>
+                <tr>
+                    <td>Expenses Total</td>
+                    <td id="expenseTotal"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Displaying income -->
+        <br />
+        <div id="incomeContainer" class="hidden-content">
+            <p class="bold p2 underline">Monthly Income</p>
+            <table>
+                <tr>
+                    <th>Label</th>
+                    <th>Pre-tax Income</th>
+                    <th>Post-tax Income</th>
+                    <th>Year</th>
+                    <th>Province</th>
+                </tr>
+
+                <tr id="incomeTemplate">
+                    <td id="label"></td>
+                    <td id="preTaxIncome"></td>
+                    <td id="postTaxIncome"></td>
+                    <td id="year"></td>
+                    <td id="province"></td>
+                </tr>
+                <tr>
+                    <td>Income Total</td>
+                    <td id="preTaxIncomeTotal"></td>
+                    <td id="postTaxIncomeTotal"></td>
+                </tr>
+            </table>
+        </div>
+
+
+        <!-- Displaying savings goals -->
+        <br />
+        <div id="monthlySavingsGoalsContainer" class="hidden-content">
+            <p class="bold p2 underline">Savings Goals</p>
+            <table>
+                <tr>
+                    <th>Label</th>
+                    <th>Cost</th>
+                </tr>
+
+                <tr id="monthlySavingsGoalsTemplate">
+                    <td id="label"></td>
+                    <td id="cost"></td>
+                </tr>
+                <tr>
+                    <td>Savings Goals Total</td>
+                    <td id="savingsTotal"></td>
+                </tr>
+            </table>
+        </div>
+
+
+        <!-- Summaries -->
+        <div>
+            <hr />
+            <table>
+                <tr>
+                    <td>Monthly Income</td>
+                    <td id="summaryMonthlyIncome"></td>
+                </tr>
+                <tr>
+                    <td>Monthly Expenses</td>
+                    <td id="summaryMonthlyExpenses"></td>
+                </tr>
             </table>
 
+            <hr />
+            <table>
+                <tr>
+                    <td>Calculated Yearly Disposable Income</td>
+                    <td id="summaryYearlyDisplosableIncome"></td>
+                </tr>
+
+                <tr>
+                    <td>Planned Yearly Disposable Income</td>
+                    <td id="summaryPlannedYearlyDisplosableIncome"></td>
+                </tr>
+            </table>
+
+            <hr />
+
+            <div id="requiredIncomeContainer" class="hidden-content">
+
+                <p class="p2 underline">Income Required For Expenses</p>
+                <table>
+                    <tr>
+                        <td>Post-tax</td>
+                        <td id="requiredIncomeExpensesYearlyPostTax">/Year</td>
+                        <td id="requiredIncomeExpensesMonthlyPostTax">/Month</td>
+                    </tr>
+                </table>
+                <br />
+
+                <p class="p2 underline">Income Required For Goals and Expenses</p>
+                <table>
+                    <tr>
+                        <td>Post-tax</td>
+                        <td id="requiredIncomeExpensesAndGoalsYearlyPostTax">/Year</td>
+                        <td id="requiredIncomeExpensesAndGoalsMonthlyPostTax">/Month</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-    </section>
+    </div>
 
     {% include "base_footer.html" %}
 

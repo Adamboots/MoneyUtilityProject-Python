@@ -26,6 +26,18 @@ body {
     padding: 0;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.p2 {
+    font-size: 18px;
+}
+
 .container {
     width: 60%;
     margin: 0 auto;

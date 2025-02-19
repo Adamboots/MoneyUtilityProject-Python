@@ -158,7 +158,7 @@ def get_federal_tax_brackets(year):
 
 # Cleaner methods
 def sanitize_calculator_input(input_income, input_year, input_province, input_payments):
-    income = int(html.escape(str(input_income)))
+    income = int(float(html.escape(str(input_income))))
     tax_year = int(html.escape(str(input_year)))
     province = html.escape(str(input_province))
     num_payments = int(html.escape(str(input_payments)))
