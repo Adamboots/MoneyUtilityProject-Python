@@ -26,6 +26,9 @@
 
         <div>
             <h3>Build Your Budget Below!</h3>
+            <button onclick="ButtonClickSaveBudget()">Save</button>
+            <button onclick="ButtonClickLoadBudget()">Load</button>
+            <button onclick="ButtonClickPrintData()">Print</button>
         </div>
 
         <br />
@@ -195,7 +198,7 @@
 
         <!-- Displaying savings goals -->
         <br />
-        <div id="monthlySavingsGoalsContainer" class="hidden-content">
+        <div id="yearlySavingsGoalsContainer" class="hidden-content">
             <p class="bold p2 underline">Savings Goals</p>
             <table>
                 <tr>
@@ -203,7 +206,7 @@
                     <th>Cost</th>
                 </tr>
 
-                <tr id="monthlySavingsGoalsTemplate">
+                <tr id="yearlySavingsGoalsTemplate">
                     <td id="label"></td>
                     <td id="cost"></td>
                 </tr>

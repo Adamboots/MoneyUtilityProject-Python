@@ -1,4 +1,9 @@
 
+const LOCAL_STORAGE_PARTAL_EXPENSE_KEY = "Monthly_Expenses";
+const LOCAL_STORAGE_PARTAL_INCOME_KEY = "Yearly_Incomes";
+const LOCAL_STORAGE_PARTAL_SAVINGS_KEY = "Yearly_Savings_Goals";
+const LOCAL_STORAGE_KEY_SEPARATOR = "__";
+
 let monthlyExpenseDict = {};
 let monthlyExpenses = 0;
 
@@ -20,6 +25,7 @@ function SubmitAddExpense(event) {
     let expenseCost = $("#expenseCost").val();
     let expenseFrequency = $("#expenseFrequency").val();
 
+
     // Expense already exists
     if (expenseLabel in monthlyExpenseDict) {
         alert("The expense " + expenseLabel + " is a duplicate and cannot be added.");
@@ -31,14 +37,7 @@ function SubmitAddExpense(event) {
         expenseCost = (expenseCost * expenseFrequency) / 12;
     }
 
-    // Track expense data
-    monthlyExpenseDict[expenseLabel] = expenseCost;
-
-    DisplayExpense(expenseLabel, expenseCost);
-    UpdateExpenseTotal(expenseCost);
-    UpdateRequiredIncomesPostTax();
-
-    ClearExpenseInput();
+    AddExpense(expenseLabel, expenseCost);
 }
 
 /*
@@ -62,14 +61,7 @@ function SubmitAddSavingsGoal(event) {
         savingsCost = (savingsCost * savingsFrequency);
     }
 
-    // Track savings goals data
-    savingsGoalsDict[savingsLabel] = savingsCost;
-
-    DisplaySavingsGoals(savingsLabel, savingsCost);
-    UpdateSavingsGoalsTotal(savingsCost);
-    UpdateRequiredIncomesPostTax();
-
-    ClearSavingsGoalsInput();
+    AddSavingsGoal(savingsLabel, savingsCost);
 }
 
 /*
@@ -100,33 +92,81 @@ function SubmitAddIncome(event) {
 }
 
 /*
-Hides the button to calculate required income the first time
-Shows the container for the required income
-Updates required incomes
+Clears any data existing previously in local storage.
+Then saves budget data to local storage.
 */
-function ButtonClickCalculateRequiredIncome(event) {
-    event.preventDefault();
+function ButtonClickSaveBudget() {
+    ClearLocalStorageData();
 
-    HideElement("bttnCalculateRequiredIncome");
-    ShowElement("bttnReCalculateRequiredIncome");
-    ShowElement("requiredIncomeContainer");
-
-    ButtonClickReCalculateRequiredIncome(event);
+    SaveLocalStorageData(LOCAL_STORAGE_PARTAL_EXPENSE_KEY, monthlyExpenseDict);
+    SaveLocalStorageData(LOCAL_STORAGE_PARTAL_INCOME_KEY, incomeDict);
+    SaveLocalStorageData(LOCAL_STORAGE_PARTAL_SAVINGS_KEY, savingsGoalsDict);
 }
 
 /*
-Updates required incomes
+Clears existing budget
+Loads the local storage data and populate page with this data
 */
-function ButtonClickReCalculateRequiredIncome(event) {
-    event.preventDefault();
+function ButtonClickLoadBudget() {
+    ClearBudgetPage();
+    let data = LoadLocalStorageData();
 
-    let year = $("#requiredIncomeYear").val();
-    let province = $("#requiredIncomeProvince").val();
+    console.log(data);
 
-    //UpdateRequiredIncomesPreTax();
+    // Load each expense
+    for (key in data[LOCAL_STORAGE_PARTAL_EXPENSE_KEY]) {
+        AddExpense(key, data[LOCAL_STORAGE_PARTAL_EXPENSE_KEY][key]) 
+    }
 
-    //RequestPreTaxIncomeCalculation((monthlyExpenses * 12), year, province, "Expenses");
-    //RequestPreTaxIncomeCalculation(((monthlyExpenses * 12) + savingsGoals), year, province, "ExpensesAndGoals");
+    // Load each savings goal
+    for (key in data[LOCAL_STORAGE_PARTAL_SAVINGS_KEY]) {
+        AddSavingsGoal(key, data[LOCAL_STORAGE_PARTAL_SAVINGS_KEY][key])
+    }
+
+    // Load each income
+    for (key in data[LOCAL_STORAGE_PARTAL_INCOME_KEY]) {
+        currentIncomeRequest = key;
+        SuccessPostTaxIncomeCalculation(data[LOCAL_STORAGE_PARTAL_INCOME_KEY][key]);
+    }
+
+}
+
+/*
+Loads and returns the local storage data
+*/
+function LoadLocalStorageData() {
+    let data = {}
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        BuildDictionaryFromFlattenedDict(key, LOCAL_STORAGE_KEY_SEPARATOR, value, data);
+    }
+    return data;
+}
+
+/*
+Loops through a dictionary and saves data to local storage
+Provided prependKey is prepended with the current key of the dictionary
+Will recursively loop through all dictionaries. 
+(ie: Dictionary of dictionaries will result in multiple calls to this function)
+*/
+function SaveLocalStorageData(prependKey, dict) {
+    for (dictKey in dict) {
+        let value = dict[dictKey];
+        if (value instanceof Object) {
+            SaveLocalStorageData(prependKey + LOCAL_STORAGE_KEY_SEPARATOR + dictKey, value);
+        }
+        else {
+            localStorage.setItem(prependKey + LOCAL_STORAGE_KEY_SEPARATOR + dictKey, value);
+        }
+    }
+}
+
+/*
+Clears saved ata on local storage
+*/
+function ClearLocalStorageData() {
+    localStorage.clear();
 }
 
 /*
@@ -148,24 +188,6 @@ function RequestPostTaxIncomeCalculation(preTaxIncome, year, province, numPaymen
     });
 }
 
-///*
-//Sends POST request to server to calculate pre tax incomes
-//*/
-//function RequestPreTaxIncomeCalculation(preTaxIncome, year, province, identifier) {
-//    $.ajax({
-//        type: "POST",
-//        url: "/income_calculator/calculate_pre_tax_income/",
-//        data: {
-//            "income": preTaxIncome,
-//            "year": year,
-//            "province": province,
-//        },
-//        success: function (data) {
-//            SuccessPostTaxIncomeCalculation(JSON.parse(data, identifier));
-//        }
-//    });
-//}
-
 /*
 Calculate post tax income request was a success. Perform the actions required when the operation is successful.
 - Clear income inputs
@@ -180,17 +202,9 @@ function SuccessPostTaxIncomeCalculation(data) {
     let preTaxIncomeMonthly = data["pre_tax_income_other_forms"]["payments_12"];
     let postTaxIncomeMonthly = data["post_tax_income_other_forms"]["payments_12"];
 
-    DisplayIncome(currentIncomeRequest, preTaxIncomeMonthly, postTaxIncomeMonthly, data["tax_year"], data["province"]);
+    CreateIncome(currentIncomeRequest, preTaxIncomeMonthly, postTaxIncomeMonthly, data["tax_year"], data["province"]);
     UpdateIncomeTotal(preTaxIncomeMonthly, postTaxIncomeMonthly);
 }
-
-///*
-//Calculate pre tax income request was a success. Perform the actions required when the operation is successful.
-//- Update the required incomes pre-tax
-//*/
-//function SuccessPreTaxIncomeCalculation(data, identifier) {
-//    UpdateRequiredIncomesPreTax(preTaxIncome, identifier);
-//}
 
 /*
 Hides other forms and displays monthly expense form
@@ -219,12 +233,40 @@ function DisplayIncomeForm() {
     ShowElement("incomeFormContainer");
 }
 
+/*
+Adds the expense label and expense cost to budget
+*/
+function AddExpense(expenseLabel, expenseCost) {
 
+    // Track expense data
+    monthlyExpenseDict[expenseLabel] = expenseCost;
+
+    CreateExpense(expenseLabel, expenseCost);
+    UpdateExpenseTotal(expenseCost);
+    UpdateRequiredIncomesPostTax();
+
+    ClearExpenseInput();
+}
+
+/*
+Adds the savings goal label and savings goal cost to budget
+*/
+function AddSavingsGoal(savingsLabel, savingsCost) {
+
+    // Track savings goals data
+    savingsGoalsDict[savingsLabel] = savingsCost;
+
+    CreateSavingsGoals(savingsLabel, savingsCost);
+    UpdateSavingsGoalsTotal(savingsCost);
+    UpdateRequiredIncomesPostTax();
+
+    ClearSavingsGoalsInput();
+}
 
 /*
 Creates and populates html to display expense
 */
-function DisplayExpense(label, cost) {
+function CreateExpense(label, cost) {
     let templateElement = document.getElementById("monthlyExpenseTemplate");
     let newElement = templateElement.cloneNode(true);
 
@@ -246,8 +288,8 @@ function DisplayExpense(label, cost) {
 /*
 Creates and populates html to display savings goals
 */
-function DisplaySavingsGoals(label, cost) {
-    let templateElement = document.getElementById("monthlySavingsGoalsTemplate");
+function CreateSavingsGoals(label, cost) {
+    let templateElement = document.getElementById("yearlySavingsGoalsTemplate");
     let newElement = templateElement.cloneNode(true);
 
     let formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'CAD' });
@@ -262,14 +304,13 @@ function DisplaySavingsGoals(label, cost) {
     templateElement.insertAdjacentElement("afterend", newElement);
 
     // Ensure savings goals are displayed
-    ShowElement("monthlySavingsGoalsContainer");
+    ShowElement("yearlySavingsGoalsContainer");
 }
-
 
 /*
 Creates and populates html to display income
 */
-function DisplayIncome(label, preTaxAmount, postTaxAmount, year, province) {
+function CreateIncome(label, preTaxAmount, postTaxAmount, year, province) {
     let templateElement = document.getElementById("incomeTemplate");
     let newElement = templateElement.cloneNode(true);
 
@@ -380,6 +421,53 @@ function UpdateRequiredIncomesPostTax() {
 //}
 
 /*
+Starts by clearing inputs on page
+Then clears the parts of the page populated by submitting the forms
+*/
+function ClearBudgetPage() {
+    // Clear inputs
+    ClearExpenseInput();
+    ClearIncomeInput();
+    ClearSavingsGoalsInput();
+
+    // Clear generated content
+    ClearGeneratedContent("monthlyExpenseContainer");
+    ClearGeneratedContent("incomeContainer");
+    ClearGeneratedContent("yearlySavingsGoalsContainer");
+
+    // Clear javascript data being stored
+    ClearJavascriptData();
+}
+
+/*
+Clears the javascript data for the income, expenses and savings goals
+*/
+function ClearJavascriptData() {
+    monthlyExpenseDict = {};
+    monthlyExpenses = 0;
+
+    lsavingsGoalsDict = {};
+    savingsGoals = 0;
+
+    incomeDict = {};
+    preTaxIncomeTotal = 0;
+    postTaxIncomeTotal = 0;
+}
+
+/*
+Clears the generated expenses content and hides elements
+*/
+function ClearGeneratedContent(containerID) {
+    HideElement(containerID);
+    let containerElements = document.getElementById(containerID).getElementsByTagName("tr");
+
+    // Loop through only the generated contents
+    for (let i = 2; i <= containerElements.length - 2; i++) {
+        containerElements[i].remove();
+    }
+}
+
+/*
 Clears the expense form inputs
 */
 function ClearExpenseInput() {
@@ -403,6 +491,7 @@ function ClearIncomeInput() {
     $("#incomeAmount").val("");
 }
 
+
 /*
 Removes hiddent-content class from element matching ID 
 */
@@ -415,4 +504,35 @@ Adds hiddent-content class from element matching ID
 */
 function HideElement(elementID) {
     document.getElementById(elementID).classList.add("hidden-content");
+}
+
+/*
+Takes a key and uses the separator to build a dictionary which was previously flattened
+*/
+function BuildDictionaryFromFlattenedDict(key, separator, value, parentDict) {
+    // Separate flattened key into the current key and remainder if possible
+    let keySepIndex = key.indexOf(separator);
+    let currentKey = key.substring(0, keySepIndex)
+
+    console.log("key: " + key);
+    console.log("keySepIndex: " + keySepIndex);
+    console.log("currentKey: " + currentKey);
+
+    // Did we reach the end of the flattened dictionary key?
+    if (keySepIndex < 0) {
+        parentDict[key] = value;
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return;
+    }
+    // The current key hasn't been added to dictionary yet
+    else if (!(currentKey in parentDict)) {
+        parentDict[currentKey] = {};
+    }
+
+    let remainderOfKey = key.substring(currentKey.length + separator.length, key.length);
+    console.log("remainderOfKey: " + remainderOfKey);
+
+
+    console.log("------------------------------------------------");
+    BuildDictionaryFromFlattenedDict(remainderOfKey, separator, value, parentDict[currentKey]);
 }
