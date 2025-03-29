@@ -111,8 +111,6 @@ function ButtonClickLoadBudget() {
     ClearBudgetPage();
     let data = LoadLocalStorageData();
 
-    console.log(data);
-
     // Load each expense
     for (key in data[LOCAL_STORAGE_PARTAL_EXPENSE_KEY]) {
         AddExpense(key, data[LOCAL_STORAGE_PARTAL_EXPENSE_KEY][key]) 
@@ -410,16 +408,6 @@ function UpdateRequiredIncomesPostTax() {
     reqMonthlyIncomeExpAndGoalsEle.innerHTML = formatter.format(monthlyExpenses + (savingsGoals / 12)) + "/Month";
 }
 
-///*
-//Updates the pre-tax income required for the section corresponding to identifier
-//*/
-//function UpdateRequiredIncomesPreTax(yearlyPreTaxIncome, identifier) {
-//    let reqYearlyIncomeExpEle = document.getElementById("requiredIncome" + identifier + "YearlyPreTax");
-//    let reqMonthlyIncomeExpEle = document.getElementById("requiredIncome" + identifier + "MonthlyPreTax");
-//    reqYearlyIncomeExpEle.innerHTML = formatter.format(yearlyPreTaxIncome) + "/Year";
-//    reqMonthlyIncomeExpEle.innerHTML = formatter.format(yearlyPreTaxIncome / 12) + "/Month";
-//}
-
 /*
 Starts by clearing inputs on page
 Then clears the parts of the page populated by submitting the forms
@@ -514,14 +502,9 @@ function BuildDictionaryFromFlattenedDict(key, separator, value, parentDict) {
     let keySepIndex = key.indexOf(separator);
     let currentKey = key.substring(0, keySepIndex)
 
-    console.log("key: " + key);
-    console.log("keySepIndex: " + keySepIndex);
-    console.log("currentKey: " + currentKey);
-
     // Did we reach the end of the flattened dictionary key?
     if (keySepIndex < 0) {
         parentDict[key] = value;
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return;
     }
     // The current key hasn't been added to dictionary yet
@@ -530,9 +513,6 @@ function BuildDictionaryFromFlattenedDict(key, separator, value, parentDict) {
     }
 
     let remainderOfKey = key.substring(currentKey.length + separator.length, key.length);
-    console.log("remainderOfKey: " + remainderOfKey);
 
-
-    console.log("------------------------------------------------");
     BuildDictionaryFromFlattenedDict(remainderOfKey, separator, value, parentDict[currentKey]);
 }
