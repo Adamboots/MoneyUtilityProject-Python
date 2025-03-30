@@ -512,9 +512,10 @@ Clears the generated expenses content and hides elements
 function ClearGeneratedContent(containerID) {
     HideElement(containerID);
     let containerElements = document.getElementById(containerID).getElementsByTagName("tr");
-
+    let containerLength = containerElements["length"];
     // Loop through only the generated contents
-    for (let i = 2; i <= containerElements.length - 2; i++) {
+    // This means skipping elements 0, 1 and the last element
+    for (let i = containerLength - 2; i > 1; i--) {
         containerElements[i].remove();
     }
 }
