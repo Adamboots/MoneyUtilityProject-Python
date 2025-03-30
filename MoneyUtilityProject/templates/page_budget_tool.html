@@ -28,7 +28,6 @@
             <h3>Build Your Budget Below!</h3>
             <button onclick="ButtonClickSaveBudget()">Save</button>
             <button onclick="ButtonClickLoadBudget()">Load</button>
-            <button onclick="ButtonClickPrintData()">Print</button>
         </div>
 
         <br />
@@ -149,18 +148,23 @@
         <br />
         <!-- Displaying expenses -->
         <div id="monthlyExpenseContainer" class="hidden-content">
-            <p class="bold p2 underline">Monthly Expenses</p>
+            <span class="bold p2 underline">Monthly Expenses</span>
+            <button onclick="SwapEditingButtons('monthlyExpenseContainer', true)">Edit</button>
+            <button onclick="SwapEditingButtons('monthlyExpenseContainer', false)" class="hidden-content">Finish Editing</button>
             <table>
                 <tr>
+                    <th></th>
                     <th>Label</th>
                     <th>Cost</th>
                 </tr>
 
-                <tr id="monthlyExpenseTemplate">
+                <tr id="monthlyExpenseTemplate" class="hidden-content">
+                    <td><button class="hidden-content">Delete</button></td>
                     <td id="label"></td>
                     <td id="cost"></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td>Expenses Total</td>
                     <td id="expenseTotal"></td>
                 </tr>
@@ -170,9 +174,12 @@
         <!-- Displaying income -->
         <br />
         <div id="incomeContainer" class="hidden-content">
-            <p class="bold p2 underline">Monthly Income</p>
+            <span class="bold p2 underline">Monthly Income</span>
+            <button onclick="SwapEditingButtons('incomeContainer', true)">Edit</button>
+            <button onclick="SwapEditingButtons('incomeContainer', false)" class="hidden-content">Finish Editing</button>
             <table>
                 <tr>
+                    <th></th>
                     <th>Label</th>
                     <th>Pre-tax Income</th>
                     <th>Post-tax Income</th>
@@ -180,7 +187,8 @@
                     <th>Province</th>
                 </tr>
 
-                <tr id="incomeTemplate">
+                <tr id="incomeTemplate" class="hidden-content">
+                    <td><button class="hidden-content">Delete</button></td>
                     <td id="label"></td>
                     <td id="preTaxIncome"></td>
                     <td id="postTaxIncome"></td>
@@ -188,6 +196,7 @@
                     <td id="province"></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td>Income Total</td>
                     <td id="preTaxIncomeTotal"></td>
                     <td id="postTaxIncomeTotal"></td>
@@ -199,18 +208,23 @@
         <!-- Displaying savings goals -->
         <br />
         <div id="yearlySavingsGoalsContainer" class="hidden-content">
-            <p class="bold p2 underline">Savings Goals</p>
+            <span class="bold p2 underline">Savings Goals</span>
+            <button onclick="SwapEditingButtons('yearlySavingsGoalsContainer', true)">Edit</button>
+            <button onclick="SwapEditingButtons('yearlySavingsGoalsContainer', false)" class="hidden-content">Finish Editing</button>
             <table>
                 <tr>
+                    <th></th>
                     <th>Label</th>
                     <th>Cost</th>
                 </tr>
 
-                <tr id="yearlySavingsGoalsTemplate">
+                <tr id="yearlySavingsGoalsTemplate" class="hidden-content">
+                    <td><button class="hidden-content">Delete</button></td>
                     <td id="label"></td>
                     <td id="cost"></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td>Savings Goals Total</td>
                     <td id="savingsTotal"></td>
                 </tr>

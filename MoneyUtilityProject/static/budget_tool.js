@@ -4,6 +4,10 @@ const LOCAL_STORAGE_PARTAL_INCOME_KEY = "Yearly_Incomes";
 const LOCAL_STORAGE_PARTAL_SAVINGS_KEY = "Yearly_Savings_Goals";
 const LOCAL_STORAGE_KEY_SEPARATOR = "__";
 
+const BUDGET_GROUP_EXP = "Expense_Budget_Group";
+const BUDGET_GROUP_INC = "Income_Budget_Group";
+const BUDGET_GROUP_SAV = "Savings_Budget_Group";
+
 let monthlyExpenseDict = {};
 let monthlyExpenses = 0;
 
@@ -262,6 +266,44 @@ function AddSavingsGoal(savingsLabel, savingsCost) {
 }
 
 /*
+Removes an expense from the budget
+*/
+function RemoveExpense(element) {
+    let label = element.children["label"].innerHTML;
+    let monthlyExpense = monthlyExpenseDict[label] * -1;
+    delete monthlyExpenseDict[label];
+
+    UpdateExpenseTotal(monthlyExpense);
+    UpdateRequiredIncomesPostTax();
+}
+
+/*
+Removes an income from the budget
+And updates relevant summaries
+*/
+function RemoveIncome(element) {
+    let label = element.children["label"].innerHTML;
+    let preTaxIncomeTotal = incomeDict[label]["pre_tax_income_other_forms"]["payments_12"] * -1;
+    let postTaxIncomeTotal = incomeDict[label]["post_tax_income_other_forms"]["payments_12"] * -1;
+    delete incomeDict[label];
+
+    UpdateIncomeTotal(preTaxIncomeTotal, postTaxIncomeTotal);
+    UpdateRequiredIncomesPostTax();
+}
+
+/*
+Removes a savings goal from the budget
+*/
+function RemoveSavingsGoal(element) {
+    let label = element.children["label"].innerHTML;
+    let savingsGoal = savingsGoalsDict[label] * -1;
+    delete savingsGoalsDict[label];
+
+    UpdateSavingsGoalsTotal(savingsGoal);
+    UpdateRequiredIncomesPostTax();
+}
+
+/*
 Creates and populates html to display expense
 */
 function CreateExpense(label, cost) {
@@ -276,9 +318,11 @@ function CreateExpense(label, cost) {
 
     tdChildren["label"].innerHTML = label;
     tdChildren["cost"].innerHTML = formatter.format(cost);
+    tdChildren[0].children[0].addEventListener("click", (evt) => DeleteEnteredItem(newElement, BUDGET_GROUP_EXP));
 
     templateElement.insertAdjacentElement("afterend", newElement);
-
+    newElement.classList.remove("hidden-content");
+    
     // Ensure expenses are displayed
     ShowElement("monthlyExpenseContainer");
 }
@@ -298,8 +342,10 @@ function CreateSavingsGoals(label, cost) {
 
     tdChildren["label"].innerHTML = label;
     tdChildren["cost"].innerHTML = formatter.format(cost);
+    tdChildren[0].children[0].addEventListener("click", (evt) => DeleteEnteredItem(newElement, BUDGET_GROUP_SAV));
 
     templateElement.insertAdjacentElement("afterend", newElement);
+    newElement.classList.remove("hidden-content");
 
     // Ensure savings goals are displayed
     ShowElement("yearlySavingsGoalsContainer");
@@ -323,11 +369,29 @@ function CreateIncome(label, preTaxAmount, postTaxAmount, year, province) {
     tdChildren["postTaxIncome"].innerHTML = formatter.format(postTaxAmount);
     tdChildren["year"].innerHTML = year;
     tdChildren["province"].innerHTML = province;
+    tdChildren[0].children[0].addEventListener("click", (evt) => DeleteEnteredItem(newElement, BUDGET_GROUP_INC));
 
     templateElement.insertAdjacentElement("afterend", newElement);
+    newElement.classList.remove("hidden-content");
 
     // Ensure income is displayed
     ShowElement("incomeContainer");
+}
+
+/*
+Removes element and calls method to remove corresponding item from budget
+*/
+function DeleteEnteredItem(element, budgetGroup) {
+    if (budgetGroup == BUDGET_GROUP_EXP) {
+        RemoveExpense(element);
+    }
+    else if (budgetGroup == BUDGET_GROUP_INC) {
+        RemoveIncome(element);
+    }
+    else if (budgetGroup == BUDGET_GROUP_SAV) {
+        RemoveSavingsGoal(element);
+    }
+    element.remove();
 }
 
 /*
@@ -353,7 +417,7 @@ function UpdateSavingsGoalsTotal(savingsAmount) {
 }
 
 /*
-Updates the income totals
+Updates the income totals using monthly incomes
 */
 function UpdateIncomeTotal(preTaxIncome, postTaxIncome) {
     preTaxIncomeTotal += Number(preTaxIncome);
@@ -479,19 +543,63 @@ function ClearIncomeInput() {
     $("#incomeAmount").val("");
 }
 
-
 /*
 Removes hiddent-content class from element matching ID 
 */
 function ShowElement(elementID) {
     document.getElementById(elementID).classList.remove("hidden-content");
 }
+/*
+Goes through all elements attached to element, and shows any buttons in table
+*/
+function ShowButtonsInTable(elementID) {
+    let element = document.getElementById(elementID);
+    let table = element.getElementsByTagName("table")[0];
+    let buttons = table.getElementsByTagName("button");
+
+    for (let i = 1; i < buttons.length; i++) {
+        buttons[i].classList.remove("hidden-content");
+    }
+}
+
 
 /*
 Adds hiddent-content class from element matching ID 
 */
 function HideElement(elementID) {
     document.getElementById(elementID).classList.add("hidden-content");
+}
+
+/*
+Goes through all elements attached to element, and hides any buttons in table
+*/
+function HideButtonsInTable(elementID) {
+    let element = document.getElementById(elementID);
+    let table = element.getElementsByTagName("table")[0];
+    let buttons = table.getElementsByTagName("button");
+
+    for (let i = 1; i < buttons.length; i++) {
+        buttons[i].classList.add("hidden-content");
+    }
+}
+
+/*
+Swaps the edit buttons displayed and hide/shows delete buttons
+*/
+function SwapEditingButtons(elementID, editMode) {
+    let element = document.getElementById(elementID);
+    let editButtons = element.getElementsByTagName("button");
+    
+    if (editMode) {
+        ShowButtonsInTable(elementID);
+        editButtons[0].classList.add("hidden-content");
+        editButtons[1].classList.remove("hidden-content");
+    }
+    else {
+        HideButtonsInTable(elementID);
+        editButtons[0].classList.remove("hidden-content");
+        editButtons[1].classList.add("hidden-content");
+    }
 }
 
 /*
