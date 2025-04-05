@@ -7,6 +7,108 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 other_common_income_payments = [12, 26, 52, 2080, 1950, 1820]
+const_federal_tax_brackets = {
+    2025: {
+        15: int(57375),
+        20.5: int(57375),
+        26: int(63132),
+        29: int(75532),
+        33: int(-1)
+    }
+}
+const_provincial_tax_brackets = {
+    2025: {
+        "AB": {
+            10: int(151234),
+            12: int(30247),
+            13: int(60493),
+            14: int(120987),
+            15: int(-1)
+        },
+        "BC": {
+            5.06: int(49279),
+            7.7: int(49281),
+            10.5: int(14598),
+            12.29: int(24249),
+            14.7: int(48899),
+            16.8: int(73523),
+            20.5: int(-1)
+        },
+        "MB": {
+            10.8: int(47564),
+            12.75: int(53636),
+            17.4: int(-1)
+        },
+        "NB": {
+            9.4: int(51306),
+            14: int(51308),
+            16: int(87446),
+            19.5: int(-1)
+        },
+        "NL": {
+            8.7: int(44192),
+            14.5: int(44910),
+            15.8: int(69410),
+            17.8: int(63118),
+            19.8: int(61304),
+            20.8: int(282215),
+            21.3: int(564429),
+            21.8: int(-1),
+        },
+        "NT": {
+            5.9: int(51964),
+            8.6: int(51966),
+            12.2: int(65037),
+            14.05: int(-1)
+        },
+        "NS": {
+            8.79: int(30507),
+            14.95: int(30508),
+            16.67: int(34868),
+            17.5: int(58767),
+            21: int(-1)
+        },
+        "NU": {
+            4: int(54707),
+            7: int(54706),
+            9: int(68468),
+            11.5: int(-1)
+        },
+        "ON": {
+            5.05: int(52886),
+            9.15: int(52889),
+            11.16: int(44225),
+            12.16: int(70000),
+            13.16: int(-1)
+        },
+        "PE": {
+            9.5: int(33328),
+            13.47: int(31328),
+            16.6: int(40344),
+            17.62: int(35000),
+            19: int(-1)
+        },
+        "QC": {
+            14: int(53255),
+            19: int(53240),
+            24: int(23095),
+            25.75: int(-1)
+        },
+        "SK": {
+            10.5: int(53463),
+            12.5: int(99287),
+            14.5: int(-1)
+
+        },
+        "YT": {
+            6.4: int(57375),
+            9: int(57375),
+            10.9: int(63132),
+            12.8: int(322118),
+            15: int(-1)
+        }
+    }
+}
 
 # Views to return templates
 def calculator_page(request):
@@ -137,24 +239,12 @@ def get_income_in_other_forms(yearly_income, num_payments):
 # Method to get provincial tax rate for the specified year
 # TODO: Make this call soon to be built tax brackets API to get data
 def get_provincial_tax_brackets(year, province):
-    manitoba_rate_2024 = {
-        10.8: int(47000),
-        12.75: int(53000),
-        17.4: int(-1)
-    }
-    return manitoba_rate_2024
+    return const_provincial_tax_brackets[year][province]
 
 # Method to get federal tax rate for the specified year
 # TODO: Make this call soon to be built tax brackets API to get data
 def get_federal_tax_brackets(year):
-    tax_rate_2024 = {
-        15: int(55867),
-        20.5: int(55866),
-        26: int(61472),
-        29: int(73547),
-        33: int(-1)
-    }
-    return tax_rate_2024
+    return const_federal_tax_brackets[year]
 
 # Cleaner methods
 def sanitize_calculator_input(input_income, input_year, input_province, input_payments):
