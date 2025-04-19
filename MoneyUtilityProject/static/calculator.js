@@ -6,7 +6,7 @@ function calculatorSubmit(event) {
     event.preventDefault(); // Prevent form from redirecting
     $.ajax({
            type: "POST",
-           url: "calculate_income/",
+        url: "income_calculator/calculate_income/",
            data:  $("#calculatorForm").serialize(), // serializes the form's elements.
            success: function(data)
            {
@@ -22,7 +22,7 @@ function incomeRangeGeneratorSubmit(event) {
     event.preventDefault(); // Prevent form from redirecting
     $.ajax({
         type: "POST",
-        url: "generate_income_ranges/",
+        url: "income_calculator/generate_income_ranges/",
         data: $("#generateIncomeRangesForm").serialize(), // serializes the form's elements.
         success: function (data) {
             displayIncomeGeneratorResults(JSON.parse(data));
@@ -109,8 +109,8 @@ function displayIncomeGeneratorResults(data) {
         tdChildrenPostTax["postTaxIncome37.5hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1950"]));
         tdChildrenPostTax["postTaxIncome35hours"].insertAdjacentHTML("afterbegin", formatter.format(postTaxIncomeOtherForms["payments_1820"]));
 
-        tdChildrenPostTax["taxYear"].innerHTML = currData["tax_year"];
-        tdChildrenPostTax["province"].innerHTML = currData["province"];
+        //tdChildrenPostTax["taxYear"].innerHTML = currData["tax_year"];
+        //tdChildrenPostTax["province"].innerHTML = currData["province"];
 
         templateElementPostTax.insertAdjacentElement("afterend", newElementPostTax);
         templateElementPostTax.insertAdjacentElement("afterend", newElementPreTax);

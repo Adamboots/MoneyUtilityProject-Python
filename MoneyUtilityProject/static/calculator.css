@@ -29,10 +29,25 @@
     margin-left: 10px;
 }
 
-.row-pre-tax {
+.calculator-result-row-content-header {
+    text-decoration: underline;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.generator-tr-pre-tax {
 
 }
 
-.row-post-tax {
+.generator-tr-row-post-tax {
     background-color: #d5e1cf;
+}
+
+.generator-td {
+    text-align: center;
+    padding: 10px;
+}
+
+.generator-td-post-pre-tax {
+    padding: 5px;
 }

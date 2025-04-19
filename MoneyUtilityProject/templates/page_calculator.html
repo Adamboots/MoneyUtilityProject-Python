@@ -30,10 +30,18 @@
             <button type="button" class="collapsible divider-button" onclick="collapsibleContent(this)">Additional Information</button>
             <section class="collapsible-content section-spacing">
                 <p>
-                    Lorem Ipsum fdkjhsfjfsd;
-                    dkfgjdklg
-                    dfgkjdfklg
-                    sjskjldd
+                    The "Income Calculator" can be used to determine the amount of provincial and federal tax you can expect for a given year.
+                </p>
+                <p>
+                    This calculation doesn't take into account any deductions other than provincial and federal taxes.
+                </p>
+                <br />
+                <p>
+                    The "Generate Income Ranges" can be used to generate a range of various incomes.
+                    
+                </p>
+                <p>
+                    These ranges include the provincial and federal tax deductions.
                 </p>
             </section>
         </div>
@@ -92,7 +100,7 @@
 
                             <br>
 
-                            <button class="form-submit" onclick="calculatorSubmit(event)">Submit</button>
+                            <button class="form-button" onclick="calculatorSubmit(event)">Submit</button>
                         </form>
                     </div>
                 </section>
@@ -107,7 +115,7 @@
                                 <p id="buttonTaxYear" class="calculator-result-row-button-content">2024</p>
                             </button>
                             <div class="collapsible-content">
-                                <label>Post tax income:</label>
+                                <p class="calculator-result-row-content-header">Post tax income:</p>
                                 <p id="postTaxIncomeYearly">/Year</p>
                                 <p id="postTaxIncomeMonthly">/Month</p>
                                 <p id="postTaxIncomeBiWeekly">/Two Weeks</p>
@@ -116,10 +124,10 @@
                                 <p id="postTaxIncome37.5Hours">/hr (37.5hrs a week)</p>
                                 <p id="postTaxIncome35Hours">/hr (35hrs a week)</p>
 
-                                <label>Provincial tax:</label>
+                                <p class="calculator-result-row-content-header">Provincial tax:</p>
                                 <p id="provincialTax"></p>
 
-                                <label>Federal tax:</label>
+                                <p class="calculator-result-row-content-header">Federal tax:</p>
                                 <p id="federalTax"></p>
                             </div>
                     </div>
@@ -185,7 +193,7 @@
                             </div>
                             <br>
 
-                            <button class="form-submit" onclick="incomeRangeGeneratorSubmit(event)">Submit</button>
+                            <button class="form-button" onclick="incomeRangeGeneratorSubmit(event)">Submit</button>
                         </form>
                     </div>
                 </section>
@@ -198,31 +206,27 @@
                                 <th></th>
                                 <th>Yearly Income</th>
                                 <th>Monthly Income</th>
-                                <th>Hourly Income (40hrs/week)</th>
-                                <th>Hourly Income (37.5hrs/week)</th>
-                                <th>Hourly Income (35hrs/week)</th>
-                                <th>Tax Year</th>
-                                <th>Province</th>
+                                <th>40hrs/week</th>
+                                <th>37.5hrs/week</th>
+                                <th>35hrs/week</th>
                             </tr>
 
-                            <tr id="incomeRangeGeneratorResultsPreTaxTemplate" class="hidden-content row-pre-tax">
-                                <td>Pre-tax</td>
-                                <td id="preTaxIncomeYearly">/year</td>
-                                <td id="preTaxIncomeMonthly">/month</td>
-                                <td id="preTaxIncome40hours">/hr (40hr weeks)</td>
-                                <td id="preTaxIncome37.5hours">/hr (37.5hr weeks)</td>
-                                <td id="preTaxIncome35hours">/hr (35hr weeks)</td>
+                            <tr id="incomeRangeGeneratorResultsPreTaxTemplate" class="hidden-content generator-tr-pre-tax">
+                                <td class="generator-td-post-pre-tax">Pre-tax</td>
+                                <td class="generator-td" id="preTaxIncomeYearly">/year</td>
+                                <td class="generator-td" id="preTaxIncomeMonthly">/month</td>
+                                <td class="generator-td" id="preTaxIncome40hours">/hr</td>
+                                <td class="generator-td" id="preTaxIncome37.5hours">/hr</td>
+                                <td class="generator-td" id="preTaxIncome35hours">/hr</td>
                             </tr>
 
-                            <tr id="incomeRangeGeneratorResultsPostTaxTemplate" class="hidden-content row-post-tax">
-                                <td>Post-tax</td>
-                                <td id="postTaxIncomeYearly">/year</td>
-                                <td id="postTaxIncomeMonthly">/month</td>
-                                <td id="postTaxIncome40hours">/hr (40hr weeks)</td>
-                                <td id="postTaxIncome37.5hours">/hr (37.5hr weeks)</td>
-                                <td id="postTaxIncome35hours">/hr (35hr weeks)</td>
-                                <td id="taxYear"></td>
-                                <td id="province"></td>
+                            <tr id="incomeRangeGeneratorResultsPostTaxTemplate" class="hidden-content generator-tr-row-post-tax">
+                                <td class="generator-td-post-pre-tax">Post-tax</td>
+                                <td class="generator-td" id="postTaxIncomeYearly">/year</td>
+                                <td class="generator-td" id="postTaxIncomeMonthly">/month</td>
+                                <td class="generator-td" id="postTaxIncome40hours">/hr</td>
+                                <td class="generator-td" id="postTaxIncome37.5hours">/hr</td>
+                                <td class="generator-td" id="postTaxIncome35hours">/hr</td>
                             </tr>
                         </table>
                     </div>

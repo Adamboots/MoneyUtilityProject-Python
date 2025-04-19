@@ -20,9 +20,5 @@ from . import views
 urlpatterns = [
     path('', include('IncomeTaxCalculator.urls')),
     path('', include('BudgetTool.urls')),
-
-    path('', views.about_page, name='about_page'),
-    path('about/', views.about_page, name='about_page'),
-
     path('admin/', admin.site.urls),
 ]

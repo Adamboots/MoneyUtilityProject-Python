@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-highway.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'general.css' %}">
+    <link rel="stylesheet" href="{% static 'budget_tool.css' %}">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <script src="{% static 'budget_tool.js' %}"></script>
 </head>
@@ -26,15 +27,15 @@
 
         <div>
             <h3>Build Your Budget Below!</h3>
-            <button onclick="ButtonClickSaveBudget()">Save</button>
-            <button onclick="ButtonClickLoadBudget()">Load</button>
+            <button class="form-button" onclick="ButtonClickSaveBudget()">Save</button>
+            <button class="form-button" onclick="ButtonClickLoadBudget()">Load</button>
         </div>
 
         <br />
         <div>
-            <button onclick="DisplayMonthlyExpenseForm()">Expenses</button>
-            <button onclick="DisplayIncomeForm()">Income</button>
-            <button onclick="DisplaySavingsGoalsForm()">Savings Goals</button>
+            <button class="form-button" onclick="DisplayMonthlyExpenseForm()">Expenses</button>
+            <button class="form-button" onclick="DisplayIncomeForm()">Income</button>
+            <button class="form-button" onclick="DisplaySavingsGoalsForm()">Savings Goals</button>
         </div>
 
         <br />
@@ -63,7 +64,7 @@
 
                 <br />
 
-                <button class="form-submit-height" onclick="SubmitAddExpense(event)">Add Expenses</button>
+                <button class="form-button" onclick="SubmitAddExpense(event)">Add Expenses</button>
             </form>
         </div>
 
@@ -123,7 +124,7 @@
 
                 <br>
 
-                <button class="form-submit" onclick="SubmitAddIncome(event)">Add Income</button>
+                <button class="form-button" onclick="SubmitAddIncome(event)">Add Income</button>
             </form>
         </div>
 
@@ -151,32 +152,32 @@
 
                 <br />
 
-                <button class="form-submit-height" onclick="SubmitAddSavingsGoal(event)">Add Savings Goal</button>
+                <button class="form-button" onclick="SubmitAddSavingsGoal(event)">Add Savings Goal</button>
             </form>
         </div>
 
         <br />
         <!-- Displaying expenses -->
         <div id="monthlyExpenseContainer" class="hidden-content">
-            <span class="bold p2 underline">Monthly Expenses</span>
-            <button onclick="SwapEditingButtons('monthlyExpenseContainer', true)">Edit</button>
-            <button onclick="SwapEditingButtons('monthlyExpenseContainer', false)" class="hidden-content">Finish Editing</button>
+            <span class="bold p2 underline budget-categories-span">Monthly Expenses</span>
+            <button class="form-button" onclick="SwapEditingButtons('monthlyExpenseContainer', true)">Edit</button>
+            <button class="form-button hidden-content" onclick="SwapEditingButtons('monthlyExpenseContainer', false)">Finish Editing</button>
             <table>
                 <tr>
                     <th></th>
-                    <th>Label</th>
-                    <th>Cost</th>
+                    <th class="table-td-spacing">Label</th>
+                    <th class="table-td-spacing">Cost</th>
                 </tr>
 
                 <tr id="monthlyExpenseTemplate" class="hidden-content">
-                    <td><button class="hidden-content">Delete</button></td>
-                    <td id="label"></td>
-                    <td id="cost"></td>
+                    <td><button class="form-button hidden-content">Delete</button></td>
+                    <td class="table-td-spacing" id="label"></td>
+                    <td class="table-td-spacing" id="cost"></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td>Expenses Total</td>
-                    <td id="expenseTotal"></td>
+                    <td class="table-td-spacing">Expenses Total</td>
+                    <td class="table-td-spacing" id="expenseTotal"></td>
                 </tr>
             </table>
         </div>
@@ -184,32 +185,32 @@
         <!-- Displaying income -->
         <br />
         <div id="incomeContainer" class="hidden-content">
-            <span class="bold p2 underline">Monthly Income</span>
-            <button onclick="SwapEditingButtons('incomeContainer', true)">Edit</button>
-            <button onclick="SwapEditingButtons('incomeContainer', false)" class="hidden-content">Finish Editing</button>
+            <span class="bold p2 underline budget-categories-span">Monthly Income</span>
+            <button class="form-button" onclick="SwapEditingButtons('incomeContainer', true)">Edit</button>
+            <button class="form-button hidden-content" onclick="SwapEditingButtons('incomeContainer', false)">Finish Editing</button>
             <table>
                 <tr>
                     <th></th>
-                    <th>Label</th>
-                    <th>Pre-tax Income</th>
-                    <th>Post-tax Income</th>
-                    <th>Year</th>
-                    <th>Province</th>
+                    <th class="table-td-spacing">Label</thclass="table-td-spacing">
+                    <th class="table-td-spacing">Pre-tax Income</th>
+                    <th class="table-td-spacing">Post-tax Income</th>
+                    <th class="table-td-spacing">Year</th>
+                    <th class="table-td-spacing">Province</th>
                 </tr>
 
                 <tr id="incomeTemplate" class="hidden-content">
-                    <td><button class="hidden-content">Delete</button></td>
-                    <td id="label"></td>
-                    <td id="preTaxIncome"></td>
-                    <td id="postTaxIncome"></td>
-                    <td id="year"></td>
-                    <td id="province"></td>
+                    <td><button class="form-button hidden-content">Delete</button></td>
+                    <td class="table-td-spacing" id="label"></td>
+                    <td class="table-td-spacing" id="preTaxIncome"></td>
+                    <td class="table-td-spacing" id="postTaxIncome"></td>
+                    <td class="table-td-spacing" id="year"></td>
+                    <td class="table-td-spacing" id="province"></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td>Income Total</td>
-                    <td id="preTaxIncomeTotal"></td>
-                    <td id="postTaxIncomeTotal"></td>
+                    <td class="table-td-spacing">Income Total</td>
+                    <td class="table-td-spacing" id="preTaxIncomeTotal"></td>
+                    <td class="table-td-spacing" id="postTaxIncomeTotal"></td>
                 </tr>
             </table>
         </div>
@@ -218,25 +219,25 @@
         <!-- Displaying savings goals -->
         <br />
         <div id="yearlySavingsGoalsContainer" class="hidden-content">
-            <span class="bold p2 underline">Savings Goals</span>
-            <button onclick="SwapEditingButtons('yearlySavingsGoalsContainer', true)">Edit</button>
-            <button onclick="SwapEditingButtons('yearlySavingsGoalsContainer', false)" class="hidden-content">Finish Editing</button>
+            <span class="bold p2 underline budget-categories-span">Savings Goals</span>
+            <button class="form-button" onclick="SwapEditingButtons('yearlySavingsGoalsContainer', true)">Edit</button>
+            <button class="form-button hidden-content" onclick="SwapEditingButtons('yearlySavingsGoalsContainer', false)">Finish Editing</button>
             <table>
                 <tr>
                     <th></th>
-                    <th>Label</th>
-                    <th>Cost</th>
+                    <th class="table-td-spacing">Label</th>
+                    <th class="table-td-spacing">Cost</th>
                 </tr>
 
                 <tr id="yearlySavingsGoalsTemplate" class="hidden-content">
-                    <td><button class="hidden-content">Delete</button></td>
-                    <td id="label"></td>
-                    <td id="cost"></td>
+                    <td><button class="form-button hidden-content">Delete</button></td>
+                    <td class="table-td-spacing" id="label"></td>
+                    <td class="table-td-spacing" id="cost"></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td>Savings Goals Total</td>
-                    <td id="savingsTotal"></td>
+                    <td class="table-td-spacing">Savings Goals Total</td>
+                    <td class="table-td-spacing" id="savingsTotal"></td>
                 </tr>
             </table>
         </div>
@@ -247,25 +248,25 @@
             <hr />
             <table>
                 <tr>
-                    <td>Monthly Income</td>
-                    <td id="summaryMonthlyIncome"></td>
+                    <td class="table-td-spacing"class="table-td-spacing">Monthly Income</tdclass="table-td-spacing"class="table-td-spacing">
+                    <td class="table-td-spacing" id="summaryMonthlyIncome"></td>
                 </tr>
                 <tr>
-                    <td>Monthly Expenses</td>
-                    <td id="summaryMonthlyExpenses"></td>
+                    <td class="table-td-spacing">Monthly Expenses</td>
+                    <td class="table-td-spacing" id="summaryMonthlyExpenses"></td>
                 </tr>
             </table>
 
             <hr />
             <table>
                 <tr>
-                    <td>Calculated Yearly Disposable Income</td>
-                    <td id="summaryYearlyDisplosableIncome"></td>
+                    <td class="table-td-spacing">Calculated Yearly Disposable Income</td>
+                    <td class="table-td-spacing" id="summaryYearlyDisplosableIncome"></td>
                 </tr>
 
                 <tr>
-                    <td>Planned Yearly Disposable Income</td>
-                    <td id="summaryPlannedYearlyDisplosableIncome"></td>
+                    <td class="table-td-spacing">Planned Yearly Disposable Income</td>
+                    <td class="table-td-spacing" id="summaryPlannedYearlyDisplosableIncome"></td>
                 </tr>
             </table>
 
@@ -276,9 +277,9 @@
                 <p class="p2 underline">Income Required For Expenses</p>
                 <table>
                     <tr>
-                        <td>Post-tax</td>
-                        <td id="requiredIncomeExpensesYearlyPostTax">/Year</td>
-                        <td id="requiredIncomeExpensesMonthlyPostTax">/Month</td>
+                        <td class="table-td-spacing">Post-tax</td>
+                        <td class="table-td-spacing" id="requiredIncomeExpensesYearlyPostTax">/Year</td>
+                        <td class="table-td-spacing" id="requiredIncomeExpensesMonthlyPostTax">/Month</td>
                     </tr>
                 </table>
                 <br />
@@ -286,9 +287,9 @@
                 <p class="p2 underline">Income Required For Goals and Expenses</p>
                 <table>
                     <tr>
-                        <td>Post-tax</td>
-                        <td id="requiredIncomeExpensesAndGoalsYearlyPostTax">/Year</td>
-                        <td id="requiredIncomeExpensesAndGoalsMonthlyPostTax">/Month</td>
+                        <td class="table-td-spacing">Post-tax</td>
+                        <td class="table-td-spacing" id="requiredIncomeExpensesAndGoalsYearlyPostTax">/Year</td>
+                        <td class="table-td-spacing" id="requiredIncomeExpensesAndGoalsMonthlyPostTax">/Month</td>
                     </tr>
                 </table>
             </div>
